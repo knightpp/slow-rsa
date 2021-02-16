@@ -84,7 +84,6 @@ impl RsaPrivateKey {
         let fi1 = fi.clone().to_bigint().unwrap();
         let mut d = gcd_euclid_extended(&e, &fi1).x;
 
-        // d.abs().to_biguint().unwrap()
         while d.is_negative() {
             // Modular inverse.
             d = d + BigInt::from_biguint(Sign::Plus, fi.clone());
