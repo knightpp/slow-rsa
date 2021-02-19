@@ -3,7 +3,7 @@ use colored::Colorize;
 use num::{
     bigint::{Sign, ToBigInt},
     iter::Range,
-    BigInt, BigUint, Signed,
+    BigInt, BigUint, Signed, ToPrimitive,
 };
 use rand::prelude::SliceRandom;
 use std::fmt::Display;
