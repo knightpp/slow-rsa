@@ -10,3 +10,12 @@ edition = "2018"
 num = "0.3" 
 rand = "0.8" # num uses old version
 colored = "2.0.0"
+# md-5 = "0.9"
+# crc32fast = "1.2"
+crc16 = "0.4"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

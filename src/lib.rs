@@ -49,12 +49,13 @@ impl RsaPublicKey {
     }
     /// `c = m ^ e % n`
     pub fn encrypt(&self, msg: &BigUint) -> BigUint {
+        assert!(&self.n >= msg);
         Pow::pow(msg, &self.e) % &self.n
     }
     /// `m' = s ^ e % n`
-    pub fn check_sign(&self, msg: &BigUint, sign: &BigUint) -> bool {
-        let mm = Pow::pow(sign, &self.e) % &self.n;
-        &mm == msg
+    pub fn restore_sign(&self, sign: &BigUint) -> BigUint {
+        assert!(&self.n >= sign);
+        Pow::pow(sign, &self.e) % &self.n
     }
 }
 impl Display for RsaPublicKey {
@@ -104,8 +105,11 @@ impl RsaPrivateKey {
     }
 
     /// `s = m ^ d % n`
-    pub fn sign(&self, message: &BigUint) -> BigUint {
-        Pow::pow(message, &self.d) % &self.n
+    ///
+    /// *m == data
+    pub fn sign(&self, data: &BigUint) -> BigUint {
+        assert!(&self.n >= data);
+        Pow::pow(data, &self.d) % &self.n
     }
 }
 
