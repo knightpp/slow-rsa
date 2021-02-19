@@ -11,7 +11,7 @@ use std::fmt::Display;
 
 pub mod algorithms;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RsaPublicKey {
     pub n: BigUint,
     pub e: BigUint,
@@ -69,7 +69,7 @@ impl Display for RsaPublicKey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RsaPrivateKey {
     pub n: BigUint,
     pub d: BigUint,
@@ -123,7 +123,7 @@ impl Display for RsaPrivateKey {
         )
     }
 }
-
+#[derive(Debug, Clone)]
 pub struct KeyPair {
     pub public: RsaPublicKey,
     pub private: RsaPrivateKey,

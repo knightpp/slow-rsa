@@ -28,7 +28,7 @@ fn main() {
     let p: BigUint = 211_u64.into(); // prime
     let q: BigUint = 229_u64.into(); // prime
     let kp = rsa::KeyPair::new_from_p_q(&p, &q);
-    // encrypt_decrypt(kp);
+    encrypt_decrypt(kp.clone());
     sign_check_sign(kp);
 }
 
