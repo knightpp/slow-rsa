@@ -1,31 +1,23 @@
-use num::{BigInt, Integer, Unsigned};
+use num::{BigInt, BigUint, Unsigned};
 
-pub fn is_prime_6kp1<'a, N>(n: &N) -> bool
-where
-    N: Integer + Unsigned + Clone,
-{
-    let zero = N::zero();
-    let one = N::one();
-    let two = one.clone() + one.clone();
-    let three = two.clone() + one.clone();
-    let five = three.clone() + two.clone();
-    if n == &two || n == &three {
+pub fn is_prime_6kp1(n: &BigUint) -> bool {
+    let zero = &BigUint::from(0_u32);
+    let one = &BigUint::from(1_u32);
+    let two = &BigUint::from(2_u32);
+    let three = &BigUint::from(3_u32);
+    let five = &BigUint::from(5_u32);
+    if n == two || n == three {
         true
-    } else if n <= &one
-        || &(n.clone() % two.clone()) == &zero
-        || &(n.clone() % three.clone()) == &zero
-    {
+    } else if n <= &one || &(n % two) == zero || &(n % three) == zero {
         false
     } else {
         let mut i = five.clone();
 
         while &num::pow(i.clone(), 2) <= &n {
-            if &(n.clone() % i.clone()) == &zero
-                || &(n.clone() % (i.clone() + two.clone())) == &zero
-            {
+            if &(n % &i) == zero || &(n % (&i + two)) == zero {
                 return false;
             }
-            i = i + five.clone();
+            i += five;
         }
 
         true
@@ -79,11 +71,17 @@ mod tests {
     fn are_primes() {
         let known_primes = [
             2_u32, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-        ];
+        ]
+        .iter()
+        .map(|x| BigUint::from(*x))
+        .collect::<Vec<_>>();
+
         for prime in known_primes.iter() {
             assert!(is_prime_6kp1(prime));
         }
-        let not_primes = (1_u32..71).filter(|x| known_primes.binary_search(x).is_err());
+        let not_primes = (1_u32..71)
+            .map(|x| BigUint::from(x))
+            .filter(|x| known_primes.binary_search(x).is_err());
         for not_a_prime in not_primes {
             assert_eq!(is_prime_6kp1(&not_a_prime), false);
         }
