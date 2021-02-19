@@ -3,7 +3,8 @@ use colored::Colorize;
 use num::{
     bigint::{Sign, ToBigInt},
     iter::Range,
-    BigInt, BigUint, Signed, ToPrimitive,
+    pow::Pow,
+    BigInt, BigUint, Signed,
 };
 use rand::prelude::SliceRandom;
 use std::fmt::Display;
@@ -46,9 +47,14 @@ impl RsaPublicKey {
     pub fn new_from_n_e(n: BigUint, e: BigUint) -> Self {
         RsaPublicKey { e, n }
     }
-
+    /// `c = m ^ e % n`
     pub fn encrypt(&self, msg: &BigUint) -> BigUint {
-        num::pow::Pow::pow(msg, &self.e) % &self.n
+        Pow::pow(msg, &self.e) % &self.n
+    }
+    /// `m' = s ^ e % n`
+    pub fn check_sign(&self, msg: &BigUint, sign: &BigUint) -> bool {
+        let mm = Pow::pow(sign, &self.e) % &self.n;
+        &mm == msg
     }
 }
 impl Display for RsaPublicKey {
@@ -91,10 +97,15 @@ impl RsaPrivateKey {
         let d = d.to_biguint().unwrap();
         Self { n, d }
     }
-
+    /// `m' = c ^ d % n`
     pub fn decrypt(&self, cipher: &BigUint) -> BigUint {
-        let c_pow_d = num::pow::Pow::pow(cipher, &self.d);
+        let c_pow_d = Pow::pow(cipher, &self.d);
         c_pow_d % &self.n
+    }
+
+    /// `s = m ^ d % n`
+    pub fn sign(&self, message: &BigUint) -> BigUint {
+        Pow::pow(message, &self.d) % &self.n
     }
 }
 
